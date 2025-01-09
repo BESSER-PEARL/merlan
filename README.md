@@ -1,4 +1,4 @@
-# Template for BESSER-PEARL Organization Repositories
+MERLAN: Multimodal Environment Recognition Language
 
 This Github template provides a collection of base files and configuration recommendations for kick-starting a new project in the BESSER-PEARL organization.
 
