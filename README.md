@@ -1,24 +1,38 @@
-MERLAN: Multimodal Environment Recognition Language
+# MERLAN: Multimodal Environment Recognition Language
 
-This Github template provides a collection of base files and configuration recommendations for kick-starting a new project in the BESSER-PEARL organization.
 
-## ⚒️ Using this template for your project
+## Generate the ANTLR code
 
-To use this template when creating a new repository in the BESSER-PEARL GitHub organization, you have to set the `Repository template` field to `BESSER-PEARL/template`.
+In order to generate the ANTLR code (parser, lexer, visitor...), run the following script (we already provide the generated files, so this step is not necessary):
 
-The new repository will use this one as a template, meaning that it will contain all the files. 
-Once the new repository is created, you can edit its files to adapt them to your needs.
+```shell
+./scripts/generate_antlr.sh
+```
 
-## ☑️ Guidelines & Contributing
+This script will generate the following files into the `generated` folder:
 
-You will find a guided description of the steps you should follow in the [guidelines](guidelines.md) file.
+- MERLAN.interp
+- MERLAN.tokens
+- MERLANLexer.interp
+- MERLANLexer.py
+- MERLANLexer.tokens
+- MERLANListener.py (not used, we use a custom visitor instead, in BESSERGenerator.py)
+- MERLANParser.py
+- MERLANVisitor.py (not used, we use a custom visitor instead, in BESSERGenerator.py)
+- ScenarioLexer.py
 
-## 📓 Publishing the documentation to ReadTheDocs
+The parser is in charge of verifying the provided .merlan code is syntactically correct and conforms to the DSL grammar ([MERLAN.g4](grammar/MERLAN.g4))
 
-This template also provides the base files to deploy the repository documentation using [ReadTheDocs](https://docs.readthedocs.io/en/stable/index.html). In the `docs` folder you can find and edit all the Sphinx documentation sources. You can check the documentation generated from this template at the [following link](https://besser-template.readthedocs.io/en/latest/). 
+We use a custom visitor, [BESSERGenerator](generated/BESSERGenerator.py) to generate executable Pyton code from the .merlan code.
 
-For more information on how to connect your repository, customize, and deploy the documentation with ReadTheDocs, you can follow [this tutorial](https://docs.readthedocs.io/en/stable/tutorial/index.html). If you do not plan to use ReadTheDocs, remove the `docs` folder and the `.readthedocs.yaml` file from your repository.
+## Generate BESSER (Python) code
 
-## 📚 References
+Run the following script to evaluate a .merlan file and generate BESSER code:
 
-This project is an extended and adapted version (to the [BESSER-PEARL organization](https://github.com/organizations/BESSER-PEARL/)) of the [GitHub Best Practices Template](https://github.com/jlcanovas/gh-best-practices-template.git)
+```shell
+./scripts/merlan_to_besser.sh
+```
+
+(You can modify the input and output file paths)
+
+This script will run the [main.py](src/main.py) file, with the provided arguments.

@@ -1,0 +1,1 @@
+python src/main.py test/scenario.merlan test/scenario.py
