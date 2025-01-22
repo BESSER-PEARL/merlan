@@ -143,21 +143,21 @@ class MERLANListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#image_object_expression_attribute.
-    def enterImage_object_expression_attribute(self, ctx:MERLANParser.Image_object_expression_attributeContext):
+    # Enter a parse tree produced by MERLANParser#scenario_image_object_attribute.
+    def enterScenario_image_object_attribute(self, ctx:MERLANParser.Scenario_image_object_attributeContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#image_object_expression_attribute.
-    def exitImage_object_expression_attribute(self, ctx:MERLANParser.Image_object_expression_attributeContext):
+    # Exit a parse tree produced by MERLANParser#scenario_image_object_attribute.
+    def exitScenario_image_object_attribute(self, ctx:MERLANParser.Scenario_image_object_attributeContext):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#image_property_expression_attribute.
-    def enterImage_property_expression_attribute(self, ctx:MERLANParser.Image_property_expression_attributeContext):
+    # Enter a parse tree produced by MERLANParser#scenario_image_property_attribute.
+    def enterScenario_image_property_attribute(self, ctx:MERLANParser.Scenario_image_property_attributeContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#image_property_expression_attribute.
-    def exitImage_property_expression_attribute(self, ctx:MERLANParser.Image_property_expression_attributeContext):
+    # Exit a parse tree produced by MERLANParser#scenario_image_property_attribute.
+    def exitScenario_image_property_attribute(self, ctx:MERLANParser.Scenario_image_property_attributeContext):
         pass
 
 

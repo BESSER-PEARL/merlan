@@ -84,13 +84,13 @@ class MERLANVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MERLANParser#image_object_expression_attribute.
-    def visitImage_object_expression_attribute(self, ctx:MERLANParser.Image_object_expression_attributeContext):
+    # Visit a parse tree produced by MERLANParser#scenario_image_object_attribute.
+    def visitScenario_image_object_attribute(self, ctx:MERLANParser.Scenario_image_object_attributeContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MERLANParser#image_property_expression_attribute.
-    def visitImage_property_expression_attribute(self, ctx:MERLANParser.Image_property_expression_attributeContext):
+    # Visit a parse tree produced by MERLANParser#scenario_image_property_attribute.
+    def visitScenario_image_property_attribute(self, ctx:MERLANParser.Scenario_image_property_attributeContext):
         return self.visitChildren(ctx)
 
 

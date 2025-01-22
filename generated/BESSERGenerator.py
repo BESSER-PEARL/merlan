@@ -155,32 +155,54 @@ class BESSERGenerator(MERLANVisitor):
     # Visit a parse tree produced by MERLANParser#scenario_image_object.
     def visitScenario_image_object(self, ctx:MERLANParser.Scenario_image_objectContext):
         attribute_list = []
-        for attribute in ctx.image_object_expression_attribute():
-            attribute_list.append(self.visit(attribute))
+        name = None
+        image_object = None
+        for attribute in ctx.scenario_image_object_attribute():
+            if attribute.IMAGE_OBJECT_NAME():
+                image_object = attribute.ID().getText()
+            elif attribute.NAME():
+                name = attribute.STRING().getText()
+            else:
+                attribute_list.append(self.visit(attribute))
+        if not name:
+            raise ValueError(f"Missing 'name' in ScenarioImageObject")
+        if not image_object:
+            raise ValueError(f"Missing 'image_object' reference in ScenarioImageObject")
         attributes = ', '.join(attribute_list)
-        expression = f'ScenarioImageObject({attributes})'
+        expression = f'ScenarioImageObject(name={name}, image_object={image_object}, {attributes})'
         return expression
 
 
     # Visit a parse tree produced by MERLANParser#scenario_image_property.
     def visitScenario_image_property(self, ctx:MERLANParser.Scenario_image_propertyContext):
         attribute_list = []
-        for attribute in ctx.image_property_expression_attribute():
-            attribute_list.append(self.visit(attribute))
+        name = None
+        image_property = None
+        for attribute in ctx.scenario_image_property_attribute():
+            if attribute.IMAGE_PROPERTY_NAME():
+                image_property = attribute.ID().getText()
+            elif attribute.NAME():
+                name = attribute.STRING().getText()
+            else:
+                attribute_list.append(self.visit(attribute))
+        if not name:
+            raise ValueError(f"Missing 'name' in ScenarioImageProperty")
+        if not image_property:
+            raise ValueError(f"Missing 'image_proeprty' reference in ScenarioImageProperty")
         attributes = ', '.join(attribute_list)
-        expression = f'ScenarioImageProperty({attributes})'
+        expression = f'ScenarioImageProperty(name={name}, image_property={image_property}, {attributes})'
         return expression
 
-    # Visit a parse tree produced by MERLANParser#image_object_expression_attribute.
-    def visitImage_object_expression_attribute(self, ctx:MERLANParser.Image_object_expression_attributeContext):
+    # Visit a parse tree produced by MERLANParser#scenario_image_object_attribute.
+    def visitScenario_image_object_attribute(self, ctx:MERLANParser.Scenario_image_object_attributeContext):
         attribute_name = ctx.getChild(1).getText()
         attribute_value = ctx.getChild(3).getText()
         if ctx.IMAGE_OBJECT_NAME() and not self.symbol_table.is_image_object_defined(attribute_value):
             raise ValueError(f"ImageObject '{attribute_value}' is not defined")
         return f'{attribute_name}={attribute_value}'
 
-    # Visit a parse tree produced by MERLANParser#image_property_expression_attribute.
-    def visitImage_property_expression_attribute(self, ctx:MERLANParser.Image_property_expression_attributeContext):
+    # Visit a parse tree produced by MERLANParser#scenario_image_property_attribute.
+    def visitScenario_image_property_attribute(self, ctx:MERLANParser.Scenario_image_property_attributeContext):
         attribute_name = ctx.getChild(1).getText()
         attribute_value = ctx.getChild(3).getText()
         if ctx.IMAGE_PROPERTY_NAME() and not self.symbol_table.is_image_property_defined(attribute_value):

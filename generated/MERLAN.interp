@@ -76,8 +76,8 @@ expression_list
 scenario_entity
 scenario_image_object
 scenario_image_property
-image_object_expression_attribute
-image_property_expression_attribute
+scenario_image_object_attribute
+scenario_image_property_attribute
 
 
 atn:

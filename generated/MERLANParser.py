@@ -121,15 +121,15 @@ class MERLANParser ( Parser ):
     RULE_scenario_entity = 12
     RULE_scenario_image_object = 13
     RULE_scenario_image_property = 14
-    RULE_image_object_expression_attribute = 15
-    RULE_image_property_expression_attribute = 16
+    RULE_scenario_image_object_attribute = 15
+    RULE_scenario_image_property_attribute = 16
 
     ruleNames =  [ "script", "image_objects", "image_object", "image_object_attribute", 
                    "image_properties", "image_property", "image_property_attribute", 
                    "scenarios", "scenario", "expression", "boolean_expression", 
                    "expression_list", "scenario_entity", "scenario_image_object", 
-                   "scenario_image_property", "image_object_expression_attribute", 
-                   "image_property_expression_attribute" ]
+                   "scenario_image_property", "scenario_image_object_attribute", 
+                   "scenario_image_property_attribute" ]
 
     EOF = Token.EOF
     IMAGE_OBJECT=1
@@ -1219,11 +1219,11 @@ class MERLANParser ( Parser ):
             else:
                 return self.getToken(MERLANParser.NEWLINE, i)
 
-        def image_object_expression_attribute(self, i:int=None):
+        def scenario_image_object_attribute(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(MERLANParser.Image_object_expression_attributeContext)
+                return self.getTypedRuleContexts(MERLANParser.Scenario_image_object_attributeContext)
             else:
-                return self.getTypedRuleContext(MERLANParser.Image_object_expression_attributeContext,i)
+                return self.getTypedRuleContext(MERLANParser.Scenario_image_object_attributeContext,i)
 
 
         def getRuleIndex(self):
@@ -1262,7 +1262,7 @@ class MERLANParser ( Parser ):
                     self.state = 153
                     self.match(MERLANParser.NEWLINE)
                     self.state = 154
-                    self.image_object_expression_attribute()
+                    self.scenario_image_object_attribute()
 
                 else:
                     raise NoViableAltException(self)
@@ -1295,11 +1295,11 @@ class MERLANParser ( Parser ):
             else:
                 return self.getToken(MERLANParser.NEWLINE, i)
 
-        def image_property_expression_attribute(self, i:int=None):
+        def scenario_image_property_attribute(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(MERLANParser.Image_property_expression_attributeContext)
+                return self.getTypedRuleContexts(MERLANParser.Scenario_image_property_attributeContext)
             else:
-                return self.getTypedRuleContext(MERLANParser.Image_property_expression_attributeContext,i)
+                return self.getTypedRuleContext(MERLANParser.Scenario_image_property_attributeContext,i)
 
 
         def getRuleIndex(self):
@@ -1338,7 +1338,7 @@ class MERLANParser ( Parser ):
                     self.state = 160
                     self.match(MERLANParser.NEWLINE)
                     self.state = 161
-                    self.image_property_expression_attribute()
+                    self.scenario_image_property_attribute()
 
                 else:
                     raise NoViableAltException(self)
@@ -1355,7 +1355,7 @@ class MERLANParser ( Parser ):
         return localctx
 
 
-    class Image_object_expression_attributeContext(ParserRuleContext):
+    class Scenario_image_object_attributeContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -1396,29 +1396,29 @@ class MERLANParser ( Parser ):
             return self.getToken(MERLANParser.FLOAT, 0)
 
         def getRuleIndex(self):
-            return MERLANParser.RULE_image_object_expression_attribute
+            return MERLANParser.RULE_scenario_image_object_attribute
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterImage_object_expression_attribute" ):
-                listener.enterImage_object_expression_attribute(self)
+            if hasattr( listener, "enterScenario_image_object_attribute" ):
+                listener.enterScenario_image_object_attribute(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitImage_object_expression_attribute" ):
-                listener.exitImage_object_expression_attribute(self)
+            if hasattr( listener, "exitScenario_image_object_attribute" ):
+                listener.exitScenario_image_object_attribute(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitImage_object_expression_attribute" ):
-                return visitor.visitImage_object_expression_attribute(self)
+            if hasattr( visitor, "visitScenario_image_object_attribute" ):
+                return visitor.visitScenario_image_object_attribute(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def image_object_expression_attribute(self):
+    def scenario_image_object_attribute(self):
 
-        localctx = MERLANParser.Image_object_expression_attributeContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 30, self.RULE_image_object_expression_attribute)
+        localctx = MERLANParser.Scenario_image_object_attributeContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 30, self.RULE_scenario_image_object_attribute)
         try:
             self.state = 186
             self._errHandler.sync(self)
@@ -1493,7 +1493,7 @@ class MERLANParser ( Parser ):
         return localctx
 
 
-    class Image_property_expression_attributeContext(ParserRuleContext):
+    class Scenario_image_property_attributeContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -1525,29 +1525,29 @@ class MERLANParser ( Parser ):
             return self.getToken(MERLANParser.FLOAT, 0)
 
         def getRuleIndex(self):
-            return MERLANParser.RULE_image_property_expression_attribute
+            return MERLANParser.RULE_scenario_image_property_attribute
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterImage_property_expression_attribute" ):
-                listener.enterImage_property_expression_attribute(self)
+            if hasattr( listener, "enterScenario_image_property_attribute" ):
+                listener.enterScenario_image_property_attribute(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitImage_property_expression_attribute" ):
-                listener.exitImage_property_expression_attribute(self)
+            if hasattr( listener, "exitScenario_image_property_attribute" ):
+                listener.exitScenario_image_property_attribute(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitImage_property_expression_attribute" ):
-                return visitor.visitImage_property_expression_attribute(self)
+            if hasattr( visitor, "visitScenario_image_property_attribute" ):
+                return visitor.visitScenario_image_property_attribute(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def image_property_expression_attribute(self):
+    def scenario_image_property_attribute(self):
 
-        localctx = MERLANParser.Image_property_expression_attributeContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 32, self.RULE_image_property_expression_attribute)
+        localctx = MERLANParser.Scenario_image_property_attributeContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 32, self.RULE_scenario_image_property_attribute)
         try:
             self.state = 200
             self._errHandler.sync(self)

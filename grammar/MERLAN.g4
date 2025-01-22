@@ -70,14 +70,14 @@ scenario_entity
         ;
 
 scenario_image_object
-        : IMAGE_OBJECT (NEWLINE image_object_expression_attribute)+
+        : IMAGE_OBJECT (NEWLINE scenario_image_object_attribute)+
         ;
 
 scenario_image_property
-        : IMAGE_PROPERTY (NEWLINE image_property_expression_attribute)+
+        : IMAGE_PROPERTY (NEWLINE scenario_image_property_attribute)+
         ;
 
-image_object_expression_attribute
+scenario_image_object_attribute
         : HYPHEN IMAGE_OBJECT_NAME COLON ID
         | HYPHEN NAME COLON STRING
         | HYPHEN MIN COLON INT
@@ -85,7 +85,7 @@ image_object_expression_attribute
         | HYPHEN SCORE COLON FLOAT
         ;
 
-image_property_expression_attribute
+scenario_image_property_attribute
         : HYPHEN IMAGE_PROPERTY_NAME COLON ID
         | HYPHEN NAME COLON STRING
         | HYPHEN SCORE COLON FLOAT
