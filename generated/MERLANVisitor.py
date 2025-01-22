@@ -54,18 +54,23 @@ class MERLANVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MERLANParser#logical_expression.
-    def visitLogical_expression(self, ctx:MERLANParser.Logical_expressionContext):
+    # Visit a parse tree produced by MERLANParser#expression.
+    def visitExpression(self, ctx:MERLANParser.ExpressionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MERLANParser#scenario_entity.
+    def visitScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MERLANParser#boolean_expression.
+    def visitBoolean_expression(self, ctx:MERLANParser.Boolean_expressionContext):
         return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by MERLANParser#expression_list.
     def visitExpression_list(self, ctx:MERLANParser.Expression_listContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by MERLANParser#expression.
-    def visitExpression(self, ctx:MERLANParser.ExpressionContext):
         return self.visitChildren(ctx)
 
 

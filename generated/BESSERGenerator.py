@@ -113,36 +113,18 @@ class BESSERGenerator(MERLANVisitor):
         id = ctx.ID().getText()
         self.symbol_table.add_scenario(id)
         self.code.append(f'{id} = Scenario("{id}")')
-        logical_expression = self.visit(ctx.logical_expression())
-        self.code.append(f'{id}.set_expression({logical_expression})')
-
-
-    # Visit a parse tree produced by MERLANParser#logical_expression.
-    def visitLogical_expression(self, ctx: MERLANParser.Logical_expressionContext):
-        # TODO: Fix indentation
-        operator = ctx.getChild(0).getText()
-        if ctx.expression():
-            expression_list = [self.visit(ctx.expression())]
-        if ctx.expression_list():
-            expression_list = self.visit(ctx.expression_list())
-        indentation = "    "*(ctx.depth()-1)
-        expressions = indentation + "    " + f',\n{indentation}    '.join(expression_list) if expression_list else ''
-        logical_expression = (f'\n{indentation}{operator}([\n'
-                              f'{expressions}\n'
-                              f'{indentation}])')
-        return logical_expression
-
-    # Visit a parse tree produced by MERLANParser#expression_list.
-    def visitExpression_list(self, ctx: MERLANParser.Expression_listContext):
-        expression_list = []
-        for expression in ctx.expression():
-            expression_list.append(self.visit(expression))
-        return expression_list
+        expression = self.visit(ctx.expression())
+        self.code.append(f'{id}.set_expression({expression})')
 
     # Visit a parse tree produced by MERLANParser#expression.
     def visitExpression(self, ctx: MERLANParser.ExpressionContext):
-        if ctx.logical_expression():
-            return self.visit(ctx.logical_expression())
+        if ctx.boolean_expression():
+            return self.visit(ctx.boolean_expression())
+        if ctx.scenario_entity():
+            return self.visit(ctx.scenario_entity())
+
+    # Visit a parse tree produced by MERLANParser#scenario_entity.
+    def visitScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
         if ctx.IMAGE_OBJECT():
             attribute_list = []
             for attribute in ctx.image_object_expression_attribute():
@@ -157,6 +139,29 @@ class BESSERGenerator(MERLANVisitor):
             attributes = ', '.join(attribute_list) if attribute_list else ''
             expression = f'ScenarioImageProperty({attributes})'
             return expression
+
+    # Visit a parse tree produced by MERLANParser#boolean_expression.
+    def visitBoolean_expression(self, ctx: MERLANParser.Boolean_expressionContext):
+        # TODO: Fix indentation
+        operator = ctx.getChild(0).getText()
+        if ctx.expression():
+            expression_list = [self.visit(ctx.expression())]
+        if ctx.expression_list():
+            expression_list = self.visit(ctx.expression_list())
+        indentation = "    "*(ctx.depth()-1)
+        expressions = indentation + "    " + f',\n{indentation}    '.join(expression_list) if expression_list else ''
+        boolean_expression = (f'\n{indentation}{operator}([\n'
+                              f'{expressions}\n'
+                              f'{indentation}])')
+        return boolean_expression
+
+    # Visit a parse tree produced by MERLANParser#expression_list.
+    def visitExpression_list(self, ctx: MERLANParser.Expression_listContext):
+        expression_list = []
+        for expression in ctx.expression():
+            expression_list.append(self.visit(expression))
+        return expression_list
+
 
     # Visit a parse tree produced by MERLANParser#image_object_expression_attribute.
     def visitImage_object_expression_attribute(self, ctx:MERLANParser.Image_object_expression_attributeContext):

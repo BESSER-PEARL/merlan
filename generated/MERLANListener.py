@@ -89,12 +89,30 @@ class MERLANListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#logical_expression.
-    def enterLogical_expression(self, ctx:MERLANParser.Logical_expressionContext):
+    # Enter a parse tree produced by MERLANParser#expression.
+    def enterExpression(self, ctx:MERLANParser.ExpressionContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#logical_expression.
-    def exitLogical_expression(self, ctx:MERLANParser.Logical_expressionContext):
+    # Exit a parse tree produced by MERLANParser#expression.
+    def exitExpression(self, ctx:MERLANParser.ExpressionContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#scenario_entity.
+    def enterScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#scenario_entity.
+    def exitScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#boolean_expression.
+    def enterBoolean_expression(self, ctx:MERLANParser.Boolean_expressionContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#boolean_expression.
+    def exitBoolean_expression(self, ctx:MERLANParser.Boolean_expressionContext):
         pass
 
 
@@ -104,15 +122,6 @@ class MERLANListener(ParseTreeListener):
 
     # Exit a parse tree produced by MERLANParser#expression_list.
     def exitExpression_list(self, ctx:MERLANParser.Expression_listContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#expression.
-    def enterExpression(self, ctx:MERLANParser.ExpressionContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#expression.
-    def exitExpression(self, ctx:MERLANParser.ExpressionContext):
         pass
 
 

@@ -19,7 +19,6 @@ This script will generate the following files into the `generated` folder:
 - MERLANListener.py (not used, we use a custom visitor instead, in BESSERGenerator.py)
 - MERLANParser.py
 - MERLANVisitor.py (not used, we use a custom visitor instead, in BESSERGenerator.py)
-- ScenarioLexer.py
 
 The parser is in charge of verifying the provided .merlan code is syntactically correct and conforms to the DSL grammar ([MERLAN.g4](grammar/MERLAN.g4))
 

@@ -43,26 +43,30 @@ image_property_attribute
 
 // Scenarios definition
 scenarios
-        : SCENARIOS NEWLINE scenario*
+        : SCENARIOS (NEWLINE scenario)+
         ;
 
 scenario
-        : ID NEWLINE logical_expression
+        : ID NEWLINE expression
         ;
 
-logical_expression
+expression
+        : scenario_entity
+        | boolean_expression
+        ;
+
+scenario_entity
+        : IMAGE_OBJECT (NEWLINE image_object_expression_attribute)+
+        | IMAGE_PROPERTY (NEWLINE image_property_expression_attribute)+
+        ;
+
+boolean_expression
         : (AND | OR) NEWLINE expression_list
         | NOT NEWLINE expression
         ;
 
 expression_list
         : expression (NEWLINE expression)*
-        ;
-
-expression
-        : IMAGE_OBJECT (NEWLINE image_object_expression_attribute)+
-        | IMAGE_PROPERTY (NEWLINE image_property_expression_attribute)+
-        | logical_expression
         ;
 
 image_object_expression_attribute
