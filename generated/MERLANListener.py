@@ -98,15 +98,6 @@ class MERLANListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#scenario_entity.
-    def enterScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#scenario_entity.
-    def exitScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
-        pass
-
-
     # Enter a parse tree produced by MERLANParser#boolean_expression.
     def enterBoolean_expression(self, ctx:MERLANParser.Boolean_expressionContext):
         pass
@@ -122,6 +113,33 @@ class MERLANListener(ParseTreeListener):
 
     # Exit a parse tree produced by MERLANParser#expression_list.
     def exitExpression_list(self, ctx:MERLANParser.Expression_listContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#scenario_entity.
+    def enterScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#scenario_entity.
+    def exitScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#scenario_image_object.
+    def enterScenario_image_object(self, ctx:MERLANParser.Scenario_image_objectContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#scenario_image_object.
+    def exitScenario_image_object(self, ctx:MERLANParser.Scenario_image_objectContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#scenario_image_property.
+    def enterScenario_image_property(self, ctx:MERLANParser.Scenario_image_propertyContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#scenario_image_property.
+    def exitScenario_image_property(self, ctx:MERLANParser.Scenario_image_propertyContext):
         pass
 
 

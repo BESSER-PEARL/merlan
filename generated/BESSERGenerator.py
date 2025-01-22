@@ -71,14 +71,14 @@ class BESSERGenerator(MERLANVisitor):
         attribute_list = []
         for attribute in ctx.image_object_attribute():
             attribute_list.append(self.visit(attribute))
-        attributes = ', ' + ', '.join(attribute_list) if attribute_list else ''
-        self.code.append(f'{id} = ImageObject(name="{id}"{attributes})')
+        attributes = ', '.join(attribute_list)
+        self.code.append(f'{id} = ImageObject(name="{id}", attributes={{{attributes}}})')
 
     # Visit a parse tree produced by MERLANParser#image_object_attribute.
     def visitImage_object_attribute(self, ctx: MERLANParser.Image_object_attributeContext):
         attribute_name = ctx.getChild(1).getText()
         attribute_value = ctx.getChild(3).getText()
-        return f'{attribute_name}={attribute_value}'
+        return f'"{attribute_name}": {attribute_value}'
 
     # Visit a parse tree produced by MERLANParser#image_properties.
     def visitImage_properties(self, ctx: MERLANParser.Image_propertiesContext):
@@ -93,14 +93,14 @@ class BESSERGenerator(MERLANVisitor):
         attribute_list = []
         for attribute in ctx.image_property_attribute():
             attribute_list.append(self.visit(attribute))
-        attributes = ', ' + ', '.join(attribute_list) if attribute_list else ''
-        self.code.append(f'{id} = ImageProperty(name="{id}"{attributes})')
+        attributes = ', '.join(attribute_list)
+        self.code.append(f'{id} = ImageProperty(name="{id}", attributes={{{attributes}}})')
 
     # Visit a parse tree produced by MERLANParser#image_property_attribute.
     def visitImage_property_attribute(self, ctx: MERLANParser.Image_property_attributeContext):
         attribute_name = ctx.getChild(1).getText()
         attribute_value = ctx.getChild(3).getText()
-        return f'{attribute_name}={attribute_value}'
+        return f'"{attribute_name}": {attribute_value}'
 
     # Visit a parse tree produced by MERLANParser#scenarios.
     def visitScenarios(self, ctx: MERLANParser.ScenariosContext):
@@ -123,23 +123,6 @@ class BESSERGenerator(MERLANVisitor):
         if ctx.scenario_entity():
             return self.visit(ctx.scenario_entity())
 
-    # Visit a parse tree produced by MERLANParser#scenario_entity.
-    def visitScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
-        if ctx.IMAGE_OBJECT():
-            attribute_list = []
-            for attribute in ctx.image_object_expression_attribute():
-                attribute_list.append(self.visit(attribute))
-            attributes = ', '.join(attribute_list) if attribute_list else ''
-            expression = f'ScenarioImageObject({attributes})'
-            return expression
-        if ctx.IMAGE_PROPERTY():
-            attribute_list = []
-            for attribute in ctx.image_property_expression_attribute():
-                attribute_list.append(self.visit(attribute))
-            attributes = ', '.join(attribute_list) if attribute_list else ''
-            expression = f'ScenarioImageProperty({attributes})'
-            return expression
-
     # Visit a parse tree produced by MERLANParser#boolean_expression.
     def visitBoolean_expression(self, ctx: MERLANParser.Boolean_expressionContext):
         # TODO: Fix indentation
@@ -148,7 +131,7 @@ class BESSERGenerator(MERLANVisitor):
             expression_list = [self.visit(ctx.expression())]
         if ctx.expression_list():
             expression_list = self.visit(ctx.expression_list())
-        indentation = "    "*(ctx.depth()-1)
+        indentation = "    " * (ctx.depth() - 1)
         expressions = indentation + "    " + f',\n{indentation}    '.join(expression_list) if expression_list else ''
         boolean_expression = (f'\n{indentation}{operator}([\n'
                               f'{expressions}\n'
@@ -162,6 +145,31 @@ class BESSERGenerator(MERLANVisitor):
             expression_list.append(self.visit(expression))
         return expression_list
 
+    # Visit a parse tree produced by MERLANParser#scenario_entity.
+    def visitScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
+        if ctx.scenario_image_object():
+            return self.visit(ctx.scenario_image_object())
+        if ctx.scenario_image_property():
+            return self.visit(ctx.scenario_image_property())
+
+    # Visit a parse tree produced by MERLANParser#scenario_image_object.
+    def visitScenario_image_object(self, ctx:MERLANParser.Scenario_image_objectContext):
+        attribute_list = []
+        for attribute in ctx.image_object_expression_attribute():
+            attribute_list.append(self.visit(attribute))
+        attributes = ', '.join(attribute_list)
+        expression = f'ScenarioImageObject({attributes})'
+        return expression
+
+
+    # Visit a parse tree produced by MERLANParser#scenario_image_property.
+    def visitScenario_image_property(self, ctx:MERLANParser.Scenario_image_propertyContext):
+        attribute_list = []
+        for attribute in ctx.image_property_expression_attribute():
+            attribute_list.append(self.visit(attribute))
+        attributes = ', '.join(attribute_list)
+        expression = f'ScenarioImageProperty({attributes})'
+        return expression
 
     # Visit a parse tree produced by MERLANParser#image_object_expression_attribute.
     def visitImage_object_expression_attribute(self, ctx:MERLANParser.Image_object_expression_attributeContext):

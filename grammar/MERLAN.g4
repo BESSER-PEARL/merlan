@@ -51,13 +51,8 @@ scenario
         ;
 
 expression
-        : scenario_entity
-        | boolean_expression
-        ;
-
-scenario_entity
-        : IMAGE_OBJECT (NEWLINE image_object_expression_attribute)+
-        | IMAGE_PROPERTY (NEWLINE image_property_expression_attribute)+
+        : boolean_expression
+        | scenario_entity
         ;
 
 boolean_expression
@@ -67,6 +62,19 @@ boolean_expression
 
 expression_list
         : expression (NEWLINE expression)*
+        ;
+
+scenario_entity
+        : scenario_image_object
+        | scenario_image_property
+        ;
+
+scenario_image_object
+        : IMAGE_OBJECT (NEWLINE image_object_expression_attribute)+
+        ;
+
+scenario_image_property
+        : IMAGE_PROPERTY (NEWLINE image_property_expression_attribute)+
         ;
 
 image_object_expression_attribute
