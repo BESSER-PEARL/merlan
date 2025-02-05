@@ -3,24 +3,24 @@ grammar MERLAN;
 // Root rule
 script
         : NEWLINE?
-          image_objects?
+          image_entities?
           image_properties?
           scenarios?
           NEWLINE?
           EOF
         ;
 
-// Image objects definition
-image_objects
-        : IMAGE_OBJECTS NEWLINE image_object*
+// Image entities definition
+image_entities
+        : IMAGE_ENTITIES NEWLINE image_entity*
         ;
 
-image_object
-        : ID NEWLINE image_object_attribute*
+image_entity
+        : ID NEWLINE image_entity_attribute*
         ;
 
 
-image_object_attribute
+image_entity_attribute
         : HYPHEN DESCRIPTION COLON STRING NEWLINE
         | HYPHEN COLOR COLON STRING NEWLINE
         | HYPHEN WEIGHT COLON FLOAT NEWLINE
@@ -38,7 +38,7 @@ image_property
 image_property_attribute
         : HYPHEN DESCRIPTION COLON STRING NEWLINE
         | HYPHEN LIGHTING COLON STRING NEWLINE
-        | HYPHEN VERSION COLON INT NEWLINE
+        | HYPHEN VERSION COLON SIGINT NEWLINE
         ;
 
 // Scenarios definition
@@ -52,7 +52,7 @@ scenario
 
 expression
         : boolean_expression
-        | scenario_entity
+        | scenario_requirement
         ;
 
 boolean_expression
@@ -64,24 +64,34 @@ expression_list
         : expression (NEWLINE expression)*
         ;
 
-scenario_entity
-        : scenario_image_object
+scenario_requirement
+        : scenario_image_entity
         | scenario_image_property
         ;
 
-scenario_image_object
-        : IMAGE_OBJECT (NEWLINE scenario_image_object_attribute)+
+scenario_image_entity
+        : IMAGE_ENTITY cardinality? (NEWLINE scenario_image_entity_attribute)+
+        ;
+
+cardinality
+        : '[' min_cardinality? max_cardinality ']'
+        ;
+
+min_cardinality
+        : INT_NONZERO '..'
+        ;
+
+max_cardinality
+        : INT_NONZERO | STAR
         ;
 
 scenario_image_property
         : IMAGE_PROPERTY (NEWLINE scenario_image_property_attribute)+
         ;
 
-scenario_image_object_attribute
-        : HYPHEN IMAGE_OBJECT_NAME COLON ID
+scenario_image_entity_attribute
+        : HYPHEN IMAGE_ENTITY_NAME COLON ID
         | HYPHEN NAME COLON STRING
-        | HYPHEN MIN COLON INT
-        | HYPHEN MAX COLON INT
         | HYPHEN SCORE COLON FLOAT
         ;
 
@@ -93,8 +103,8 @@ scenario_image_property_attribute
 
 // Tokens
 
-IMAGE_OBJECT        : 'IMAGE_OBJECT' ;
-IMAGE_OBJECTS       : 'IMAGE_OBJECTS' ;
+IMAGE_ENTITY        : 'IMAGE_ENTITY' ;
+IMAGE_ENTITIES      : 'IMAGE_ENTITIES' ;
 IMAGE_PROPERTY      : 'IMAGE_PROPERTY' ;
 IMAGE_PROPERTIES    : 'IMAGE_PROPERTIES' ;
 SCENARIOS           : 'SCENARIOS' ;
@@ -109,17 +119,18 @@ WEIGHT              : 'weight' ;
 LIGHTING            : 'lighting' ;
 VERSION             : 'version' ;
 
-IMAGE_OBJECT_NAME   : 'image_object' ;
+IMAGE_ENTITY_NAME   : 'image_entity' ;
 IMAGE_PROPERTY_NAME : 'image_property' ;
-MAX                 : 'max' ;
-MIN                 : 'min' ;
 NAME                : 'name' ;
 SCORE               : 'score' ;
 
 ID : [a-zA-Z_][a-zA-Z0-9_]* ;
 STRING : '"' (~["\\] | '\\' .)* '"' ;
 FLOAT : [0-9]+ '.' [0-9]+ ;
+INT_NONZERO : [1-9] [0-9]* ;
 INT : [0-9]+ ;
+SIGINT : '-'? INT ;
+STAR : '*' ;
 
 // Whitespace and formatting
 NEWLINE : ('\r'? '\n')+ ;

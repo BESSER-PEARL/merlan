@@ -17,30 +17,30 @@ class MERLANListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#image_objects.
-    def enterImage_objects(self, ctx:MERLANParser.Image_objectsContext):
+    # Enter a parse tree produced by MERLANParser#image_entities.
+    def enterImage_entities(self, ctx:MERLANParser.Image_entitiesContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#image_objects.
-    def exitImage_objects(self, ctx:MERLANParser.Image_objectsContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#image_object.
-    def enterImage_object(self, ctx:MERLANParser.Image_objectContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#image_object.
-    def exitImage_object(self, ctx:MERLANParser.Image_objectContext):
+    # Exit a parse tree produced by MERLANParser#image_entities.
+    def exitImage_entities(self, ctx:MERLANParser.Image_entitiesContext):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#image_object_attribute.
-    def enterImage_object_attribute(self, ctx:MERLANParser.Image_object_attributeContext):
+    # Enter a parse tree produced by MERLANParser#image_entity.
+    def enterImage_entity(self, ctx:MERLANParser.Image_entityContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#image_object_attribute.
-    def exitImage_object_attribute(self, ctx:MERLANParser.Image_object_attributeContext):
+    # Exit a parse tree produced by MERLANParser#image_entity.
+    def exitImage_entity(self, ctx:MERLANParser.Image_entityContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#image_entity_attribute.
+    def enterImage_entity_attribute(self, ctx:MERLANParser.Image_entity_attributeContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#image_entity_attribute.
+    def exitImage_entity_attribute(self, ctx:MERLANParser.Image_entity_attributeContext):
         pass
 
 
@@ -116,21 +116,48 @@ class MERLANListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#scenario_entity.
-    def enterScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
+    # Enter a parse tree produced by MERLANParser#scenario_requirement.
+    def enterScenario_requirement(self, ctx:MERLANParser.Scenario_requirementContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#scenario_entity.
-    def exitScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
+    # Exit a parse tree produced by MERLANParser#scenario_requirement.
+    def exitScenario_requirement(self, ctx:MERLANParser.Scenario_requirementContext):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#scenario_image_object.
-    def enterScenario_image_object(self, ctx:MERLANParser.Scenario_image_objectContext):
+    # Enter a parse tree produced by MERLANParser#scenario_image_entity.
+    def enterScenario_image_entity(self, ctx:MERLANParser.Scenario_image_entityContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#scenario_image_object.
-    def exitScenario_image_object(self, ctx:MERLANParser.Scenario_image_objectContext):
+    # Exit a parse tree produced by MERLANParser#scenario_image_entity.
+    def exitScenario_image_entity(self, ctx:MERLANParser.Scenario_image_entityContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#cardinality.
+    def enterCardinality(self, ctx:MERLANParser.CardinalityContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#cardinality.
+    def exitCardinality(self, ctx:MERLANParser.CardinalityContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#min_cardinality.
+    def enterMin_cardinality(self, ctx:MERLANParser.Min_cardinalityContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#min_cardinality.
+    def exitMin_cardinality(self, ctx:MERLANParser.Min_cardinalityContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#max_cardinality.
+    def enterMax_cardinality(self, ctx:MERLANParser.Max_cardinalityContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#max_cardinality.
+    def exitMax_cardinality(self, ctx:MERLANParser.Max_cardinalityContext):
         pass
 
 
@@ -143,12 +170,12 @@ class MERLANListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#scenario_image_object_attribute.
-    def enterScenario_image_object_attribute(self, ctx:MERLANParser.Scenario_image_object_attributeContext):
+    # Enter a parse tree produced by MERLANParser#scenario_image_entity_attribute.
+    def enterScenario_image_entity_attribute(self, ctx:MERLANParser.Scenario_image_entity_attributeContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#scenario_image_object_attribute.
-    def exitScenario_image_object_attribute(self, ctx:MERLANParser.Scenario_image_object_attributeContext):
+    # Exit a parse tree produced by MERLANParser#scenario_image_entity_attribute.
+    def exitScenario_image_entity_attribute(self, ctx:MERLANParser.Scenario_image_entity_attributeContext):
         pass
 
 

@@ -1,6 +1,4 @@
-
-
-IMAGE_OBJECTS
+IMAGE_ENTITIES
 
     person
         - description: "a human being"
@@ -18,23 +16,18 @@ IMAGE_PROPERTIES
     iphone
         - description: "The phone in the image (if there is one) is an iPhone (Apple)"
 
-
 SCENARIOS
     scenario1
-            AND
-                IMAGE_PROPERTY
-                    - image_property: iphone
-                    - name: "iphone"
-                    - score: 0.5
-
-                IMAGE_OBJECT
-                    - image_object: person
-                    - name: "person"
-                    - max: 3
-                    - score: 0.3
-
-                IMAGE_OBJECT
-                    - image_object: phone
-                    - name: "phone"
-                    - score: 0.5
-
+        AND
+            IMAGE_PROPERTY
+                - image_property: iphone
+                - name: "iphone"
+                - score: 0.5
+            IMAGE_ENTITY [2..*]
+                - image_entity: person
+                - name: "person"
+                - score: 0.3
+            IMAGE_ENTITY
+                - image_entity: phone
+                - name: "phone"
+                - score: 0.5

@@ -14,18 +14,18 @@ class MERLANVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MERLANParser#image_objects.
-    def visitImage_objects(self, ctx:MERLANParser.Image_objectsContext):
+    # Visit a parse tree produced by MERLANParser#image_entities.
+    def visitImage_entities(self, ctx:MERLANParser.Image_entitiesContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MERLANParser#image_object.
-    def visitImage_object(self, ctx:MERLANParser.Image_objectContext):
+    # Visit a parse tree produced by MERLANParser#image_entity.
+    def visitImage_entity(self, ctx:MERLANParser.Image_entityContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MERLANParser#image_object_attribute.
-    def visitImage_object_attribute(self, ctx:MERLANParser.Image_object_attributeContext):
+    # Visit a parse tree produced by MERLANParser#image_entity_attribute.
+    def visitImage_entity_attribute(self, ctx:MERLANParser.Image_entity_attributeContext):
         return self.visitChildren(ctx)
 
 
@@ -69,13 +69,28 @@ class MERLANVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MERLANParser#scenario_entity.
-    def visitScenario_entity(self, ctx:MERLANParser.Scenario_entityContext):
+    # Visit a parse tree produced by MERLANParser#scenario_requirement.
+    def visitScenario_requirement(self, ctx:MERLANParser.Scenario_requirementContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MERLANParser#scenario_image_object.
-    def visitScenario_image_object(self, ctx:MERLANParser.Scenario_image_objectContext):
+    # Visit a parse tree produced by MERLANParser#scenario_image_entity.
+    def visitScenario_image_entity(self, ctx:MERLANParser.Scenario_image_entityContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MERLANParser#cardinality.
+    def visitCardinality(self, ctx:MERLANParser.CardinalityContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MERLANParser#min_cardinality.
+    def visitMin_cardinality(self, ctx:MERLANParser.Min_cardinalityContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MERLANParser#max_cardinality.
+    def visitMax_cardinality(self, ctx:MERLANParser.Max_cardinalityContext):
         return self.visitChildren(ctx)
 
 
@@ -84,8 +99,8 @@ class MERLANVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MERLANParser#scenario_image_object_attribute.
-    def visitScenario_image_object_attribute(self, ctx:MERLANParser.Scenario_image_object_attributeContext):
+    # Visit a parse tree produced by MERLANParser#scenario_image_entity_attribute.
+    def visitScenario_image_entity_attribute(self, ctx:MERLANParser.Scenario_image_entity_attributeContext):
         return self.visitChildren(ctx)
 
 
