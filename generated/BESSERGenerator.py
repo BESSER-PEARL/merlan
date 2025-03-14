@@ -1,5 +1,5 @@
-# import sys
-# sys.path.append("D:\\MARCOS\\Git\\merlan")
+import sys
+sys.path.append("D:\\MARCOS\\Git\\merlan")
 
 from antlr4 import *
 from generated.MERLANLexer import MERLANLexer
@@ -7,173 +7,198 @@ from generated.MERLANParser import MERLANParser
 from generated.MERLANVisitor import MERLANVisitor
 
 
+def get_attribute(attribute_name: str, attributes: list[tuple[str, str]]) -> str:
+    attribute_values = [attribute[1] for attribute in attributes if attribute[0] == attribute_name]
+    if len(attribute_values) != 1:
+        raise ValueError(f"You must define 1 attribute named {attribute_name}")
+    return attribute_values[0]
+
+
+def join_attributes(attributes:  list[tuple[str, str]], exclude: list[str] = None):
+    if exclude is None:
+        exclude = []
+    return ', '.join([f'"{attribute[0]}": {attribute[1]}' for attribute in attributes if attribute[0] not in exclude])
+
 class SymbolTable:
 
     def __init__(self):
-        self.image_entities: set = set()
-        self.image_properties: set = set()
-        self.scenarios: set = set()
+        self.concrete_entities: set = set()
+        self.abstract_entities: set = set()
+        self.requirements: set = set()
 
-    def add_image_entity(self, name: str):
-        if name in self.image_entities | self.image_properties | self.scenarios:
+    def add_concrete_entity(self, name: str):
+        if name in self.concrete_entities | self.abstract_entities | self.requirements:
             raise ValueError(f"'{name}' is already defined")
-        self.image_entities.add(name)
+        self.concrete_entities.add(name)
 
-    def add_image_property(self, name: str):
-        if name in self.image_entities | self.image_properties | self.scenarios:
+    def add_abstract_entity(self, name: str):
+        if name in self.concrete_entities | self.abstract_entities | self.requirements:
             raise ValueError(f"'{name}' is already defined")
-        self.image_properties.add(name)
+        self.abstract_entities.add(name)
 
-    def add_scenario(self, name: str):
-        if name in self.image_entities | self.image_properties | self.scenarios:
+    def add_requirement(self, name: str):
+        if name in self.concrete_entities | self.abstract_entities | self.requirements:
             raise ValueError(f"'{name}' is already defined")
-        self.scenarios.add(name)
+        self.requirements.add(name)
 
-    def is_image_entity_defined(self, name: str) -> bool:
-        return name in self.image_entities
+    def is_concrete_entity_defined(self, name: str) -> bool:
+        return name in self.concrete_entities
 
-    def is_image_property_defined(self, name: str) -> bool:
-        return name in self.image_properties
+    def is_abstract_entity_defined(self, name: str) -> bool:
+        return name in self.abstract_entities
 
-    def is_scenario_defined(self, name: str) -> bool:
-        return name in self.scenarios
+    def is_requirement_defined(self, name: str) -> bool:
+        return name in self.requirements
 
 
 class BESSERGenerator(MERLANVisitor):
+
     def __init__(self):
         super().__init__()
         self.symbol_table: SymbolTable = SymbolTable()
         self.code: list[str] = [
-            "from besser.agent.core.image.image_entity import ImageEntity",
-            "from besser.agent.core.image.image_property import ImageProperty",
-            "from besser.agent.core.scenario.scenario import Scenario, AND, OR, NOT",
-            "from besser.agent.core.scenario.scenario_image_entity import ScenarioImageEntity",
-            "from besser.agent.core.scenario.scenario_image_property import ScenarioImageProperty",
+            "from besser.agent.core.entity.image.abstract_entity import AbstractEntity",
+            "from besser.agent.core.entity.image.concrete_entity import ConcreteEntity",
+            "from besser.agent.core.requirement.abstract_requirement import AbstractRequirement",
+            "from besser.agent.core.requirement.boolean_expression import OR, AND, NOT",
+            "from besser.agent.core.requirement.concrete_requirement import ConcreteRequirement",
+            "from besser.agent.core.requirement.requirement import Requirement"
         ]
 
     # Visit a parse tree produced by MERLANParser#script.
-    def visitScript(self, ctx: MERLANParser.ScriptContext):
-        self.visit(ctx.image_entities())
-        self.visit(ctx.image_properties())
-        self.visit(ctx.scenarios())
+    def visitScript(self, ctx:MERLANParser.ScriptContext):
+        self.visit(ctx.entities())
+        self.visit(ctx.requirements())
         return '\n'.join(self.code)
 
-    # Visit a parse tree produced by MERLANParser#image_entities.
-    def visitImage_entities(self, ctx: MERLANParser.Image_entitiesContext):
-        self.code.append('# Image Entities')
-        for image_entity in ctx.image_entity():
-            self.visit(image_entity)
+    # Visit a parse tree produced by MERLANParser#entities.
+    def visitEntities(self, ctx:MERLANParser.EntitiesContext):
+        self.visit(ctx.concrete_entities())
+        self.visit(ctx.abstract_entities())
 
-    # Visit a parse tree produced by MERLANParser#image_entity.
-    def visitImage_entity(self, ctx: MERLANParser.Image_entityContext):
-        id = ctx.ID().getText()
-        self.symbol_table.add_image_entity(id)
-        attribute_list = []
-        for attribute in ctx.image_entity_attribute():
-            attribute_list.append(self.visit(attribute))
-        attributes = ', '.join(attribute_list)
-        self.code.append(f'{id} = ImageEntity(name="{id}", attributes={{{attributes}}})')
-
-    # Visit a parse tree produced by MERLANParser#image_entity_attribute.
-    def visitImage_entity_attribute(self, ctx: MERLANParser.Image_entity_attributeContext):
+    # Visit a parse tree produced by MERLANParser#attribute.
+    def visitAttribute(self, ctx:MERLANParser.AttributeContext):
+        # TODO if value is ID, check it exists (only under requirement, in entity is not allowed)
         attribute_name = ctx.getChild(1).getText()
         attribute_value = ctx.getChild(3).getText()
-        return f'"{attribute_name}": {attribute_value}'
+        if attribute_value == '?':
+            attribute_value = '"?"'  # TODO: HANDLE EMPTY VALUES
+        return attribute_name, attribute_value
 
-    # Visit a parse tree produced by MERLANParser#image_properties.
-    def visitImage_properties(self, ctx: MERLANParser.Image_propertiesContext):
-        self.code.append('# Image Properties')
-        for image_property in ctx.image_property():
-            self.visit(image_property)
+    # Visit a parse tree produced by MERLANParser#concrete_entities.
+    def visitConcrete_entities(self, ctx:MERLANParser.Concrete_entitiesContext):
+        self.code.append('# Concrete Entities')
+        for concrete_entity in ctx.concrete_entity():
+            self.visit(concrete_entity)
 
-    # Visit a parse tree produced by MERLANParser#image_property.
-    def visitImage_property(self, ctx: MERLANParser.Image_propertyContext):
+    # Visit a parse tree produced by MERLANParser#concrete_entity.
+    def visitConcrete_entity(self, ctx:MERLANParser.Concrete_entityContext):
+        # TODO CHECK ATTRIBUTES ARE NOT REPEATED
+        # TODO CHECK MANDATORY ATTRIBUTES
+        # TODO ATTRIBUTE VALUE IS VALID TYPE
         id = ctx.ID().getText()
-        self.symbol_table.add_image_property(id)
+        self.symbol_table.add_concrete_entity(id)
         attribute_list = []
-        for attribute in ctx.image_property_attribute():
+        for attribute in ctx.attribute():
             attribute_list.append(self.visit(attribute))
-        attributes = ', '.join(attribute_list)
-        self.code.append(f'{id} = ImageProperty(name="{id}", attributes={{{attributes}}})')
+        attributes = join_attributes(attribute_list)
+        # TODO UPDATE PYTHON CODE
+        self.code.append(f'{id} = ConcreteEntity(name="{id}", attributes={{{attributes}}})')
 
-    # Visit a parse tree produced by MERLANParser#image_property_attribute.
-    def visitImage_property_attribute(self, ctx: MERLANParser.Image_property_attributeContext):
-        attribute_name = ctx.getChild(1).getText()
-        attribute_value = ctx.getChild(3).getText()
-        return f'"{attribute_name}": {attribute_value}'
+    # Visit a parse tree produced by MERLANParser#abstract_entities.
+    def visitAbstract_entities(self, ctx:MERLANParser.Abstract_entitiesContext):
+        self.code.append('# Abstract Entities')
+        for abstract_entity in ctx.abstract_entity():
+            self.visit(abstract_entity)
 
-    # Visit a parse tree produced by MERLANParser#scenarios.
-    def visitScenarios(self, ctx: MERLANParser.ScenariosContext):
-        self.code.append('# Scenarios')
-        for scenario in ctx.scenario():
-            self.visit(scenario)
-
-    # Visit a parse tree produced by MERLANParser#scenario.
-    def visitScenario(self, ctx: MERLANParser.ScenarioContext):
+    # Visit a parse tree produced by MERLANParser#abstract_entity.
+    def visitAbstract_entity(self, ctx:MERLANParser.Abstract_entityContext):
+        # TODO CHECK ATTRIBUTES ARE NOT REPEATED
+        # TODO CHECK MANDATORY ATTRIBUTES
+        # TODO ATTRIBUTE VALUE IS VALID TYPE
         id = ctx.ID().getText()
-        self.symbol_table.add_scenario(id)
-        self.code.append(f'{id} = Scenario("{id}")')
-        expression = self.visit(ctx.expression())
+        self.symbol_table.add_abstract_entity(id)
+        attribute_list = []
+        for attribute in ctx.attribute():
+            attribute_list.append(self.visit(attribute))
+        attributes = join_attributes(attribute_list)
+        # TODO UPDATE PYTHON CODE
+        self.code.append(f'{id} = AbstractEntity(name="{id}", attributes={{{attributes}}})')
+
+    # Visit a parse tree produced by MERLANParser#requirements.
+    def visitRequirements(self, ctx:MERLANParser.RequirementsContext):
+        self.code.append('# Requirements')
+        for requirement_definition in ctx.requirement_definition():
+            self.visit(requirement_definition)
+
+    # Visit a parse tree produced by MERLANParser#requirement_definition.
+    def visitRequirement_definition(self, ctx: MERLANParser.Requirement_definitionContext):
+        id = ctx.ID().getText()
+        self.symbol_table.add_requirement(id)
+        # TODO UPDATE PYTHON CODE
+        self.code.append(f'{id} = Requirement("{id}")')
+        expression = self.visit(ctx.requirement())
         self.code.append(f'{id}.set_expression({expression})')
 
-    # Visit a parse tree produced by MERLANParser#expression.
-    def visitExpression(self, ctx: MERLANParser.ExpressionContext):
-        if ctx.boolean_expression():
-            return self.visit(ctx.boolean_expression())
-        if ctx.scenario_requirement():
-            return self.visit(ctx.scenario_requirement())
+    # Visit a parse tree produced by MERLANParser#requirement.
+    def visitRequirement(self, ctx:MERLANParser.RequirementContext):
+        if ctx.simple_requirement():
+            return self.visit(ctx.simple_requirement())
+        elif ctx.complex_requirement():
+            return self.visit(ctx.complex_requirement())
 
-    # Visit a parse tree produced by MERLANParser#boolean_expression.
-    def visitBoolean_expression(self, ctx: MERLANParser.Boolean_expressionContext):
-        # TODO: Fix indentation
+    # Visit a parse tree produced by MERLANParser#complex_requirement.
+    def visitComplex_requirement(self, ctx:MERLANParser.Complex_requirementContext):
         operator = ctx.getChild(0).getText()
-        if ctx.expression():
-            expression_list = [self.visit(ctx.expression())]
-        if ctx.expression_list():
-            expression_list = self.visit(ctx.expression_list())
+        requirement_list = []
+        for requirement in ctx.requirement():
+            requirement_list.append(self.visit(requirement))
         indentation = "    " * (ctx.depth() - 1)
-        expressions = indentation + "    " + f',\n{indentation}    '.join(expression_list) if expression_list else ''
+        expressions = indentation + "    " + f',\n{indentation}    '.join(requirement_list) if requirement_list else ''
         boolean_expression = (f'\n{indentation}{operator}([\n'
                               f'{expressions}\n'
                               f'{indentation}])')
         return boolean_expression
 
-    # Visit a parse tree produced by MERLANParser#expression_list.
-    def visitExpression_list(self, ctx: MERLANParser.Expression_listContext):
-        expression_list = []
-        for expression in ctx.expression():
-            expression_list.append(self.visit(expression))
-        return expression_list
+    # Visit a parse tree produced by MERLANParser#simple_requirement.
+    def visitSimple_requirement(self, ctx:MERLANParser.Simple_requirementContext):
+        if ctx.concrete_requirement():
+            return self.visit(ctx.concrete_requirement())
+        elif ctx.abstract_requirement():
+            return self.visit(ctx.abstract_requirement())
 
-    # Visit a parse tree produced by MERLANParser#scenario_requirement.
-    def visitScenario_requirement(self, ctx:MERLANParser.Scenario_requirementContext):
-        if ctx.scenario_image_entity():
-            return self.visit(ctx.scenario_image_entity())
-        if ctx.scenario_image_property():
-            return self.visit(ctx.scenario_image_property())
-
-    # Visit a parse tree produced by MERLANParser#scenario_image_entity.
-    def visitScenario_image_entity(self, ctx:MERLANParser.Scenario_image_entityContext):
+    # Visit a parse tree produced by MERLANParser#concrete_requirement.
+    def visitConcrete_requirement(self, ctx:MERLANParser.Concrete_requirementContext):
+        # TODO CHECK ATTRIBUTES ARE NOT REPEATED
+        # TODO CHECK MANDATORY ATTRIBUTES
+        # TODO ATTRIBUTE VALUE IS VALID TYPE
         attribute_list = []
-        name = None
-        image_entity = None
         if ctx.cardinality():
             min, max = self.visit(ctx.cardinality())
-            attribute_list.append(f'min={min}')
-            attribute_list.append(f'max={max}')
-        for attribute in ctx.scenario_image_entity_attribute():
-            if attribute.IMAGE_ENTITY_NAME():
-                image_entity = attribute.ID().getText()
-            elif attribute.NAME():
-                name = attribute.STRING().getText()
-            else:
-                attribute_list.append(self.visit(attribute))
-        if not name:
-            raise ValueError(f"Missing 'name' in ScenarioImageEntity")
-        if not image_entity:
-            raise ValueError(f"Missing 'image_entity' reference in ScenarioImageEntity")
-        attributes = ', '.join(attribute_list)
-        expression = f'ScenarioImageEntity(name={name}, image_entity={image_entity}, {attributes})'
+            attribute_list.append(('min', min))
+            attribute_list.append(('max', max))
+        for attribute in ctx.attribute():
+            attribute_list.append(self.visit(attribute))
+        name = get_attribute('name', attribute_list)
+        entity = get_attribute('entity', attribute_list)
+        attributes = join_attributes(attribute_list, exclude=['name', 'entity'])
+        # TODO UPDATE PYTHON CODE
+        expression = f'ConcreteRequirement(name={name}, concrete_entity={entity}, attributes={{{attributes}}})'
+        return expression
+
+    # Visit a parse tree produced by MERLANParser#abstract_requirement.
+    def visitAbstract_requirement(self, ctx:MERLANParser.Abstract_requirementContext):
+        # TODO CHECK ATTRIBUTES ARE NOT REPEATED
+        # TODO CHECK MANDATORY ATTRIBUTES
+        # TODO ATTRIBUTE VALUE IS VALID TYPE
+        attribute_list = []
+        for attribute in ctx.attribute():
+            attribute_list.append(self.visit(attribute))
+        name = get_attribute('name', attribute_list)
+        entity = get_attribute('entity', attribute_list)
+        attributes = join_attributes(attribute_list, exclude=['name', 'entity'])
+        # TODO UPDATE PYTHON CODE
+        expression = f'AbstractRequirement(name={name}, abstract_entity={entity}, attributes={{{attributes}}})'
         return expression
 
     # Visit a parse tree produced by MERLANParser#cardinality.
@@ -199,39 +224,3 @@ class BESSERGenerator(MERLANVisitor):
         if value == '*':
             value = 0
         return value
-
-    # Visit a parse tree produced by MERLANParser#scenario_image_property.
-    def visitScenario_image_property(self, ctx:MERLANParser.Scenario_image_propertyContext):
-        attribute_list = []
-        name = None
-        image_property = None
-        for attribute in ctx.scenario_image_property_attribute():
-            if attribute.IMAGE_PROPERTY_NAME():
-                image_property = attribute.ID().getText()
-            elif attribute.NAME():
-                name = attribute.STRING().getText()
-            else:
-                attribute_list.append(self.visit(attribute))
-        if not name:
-            raise ValueError(f"Missing 'name' in ScenarioImageProperty")
-        if not image_property:
-            raise ValueError(f"Missing 'image_proeprty' reference in ScenarioImageProperty")
-        attributes = ', '.join(attribute_list)
-        expression = f'ScenarioImageProperty(name={name}, image_property={image_property}, {attributes})'
-        return expression
-
-    # Visit a parse tree produced by MERLANParser#scenario_image_entity_attribute.
-    def visitScenario_image_entity_attribute(self, ctx:MERLANParser.Scenario_image_entity_attributeContext):
-        attribute_name = ctx.getChild(1).getText()
-        attribute_value = ctx.getChild(3).getText()
-        if ctx.IMAGE_ENTITY_NAME() and not self.symbol_table.is_image_entity_defined(attribute_value):
-            raise ValueError(f"ImageEntity '{attribute_value}' is not defined")
-        return f'{attribute_name}={attribute_value}'
-
-    # Visit a parse tree produced by MERLANParser#scenario_image_property_attribute.
-    def visitScenario_image_property_attribute(self, ctx:MERLANParser.Scenario_image_property_attributeContext):
-        attribute_name = ctx.getChild(1).getText()
-        attribute_value = ctx.getChild(3).getText()
-        if ctx.IMAGE_PROPERTY_NAME() and not self.symbol_table.is_image_property_defined(attribute_value):
-            raise ValueError(f"ImageProperty '{attribute_value}' is not defined")
-        return f'{attribute_name}={attribute_value}'

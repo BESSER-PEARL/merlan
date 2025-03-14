@@ -17,120 +17,120 @@ class MERLANListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#image_entities.
-    def enterImage_entities(self, ctx:MERLANParser.Image_entitiesContext):
+    # Enter a parse tree produced by MERLANParser#entities.
+    def enterEntities(self, ctx:MERLANParser.EntitiesContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#image_entities.
-    def exitImage_entities(self, ctx:MERLANParser.Image_entitiesContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#image_entity.
-    def enterImage_entity(self, ctx:MERLANParser.Image_entityContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#image_entity.
-    def exitImage_entity(self, ctx:MERLANParser.Image_entityContext):
+    # Exit a parse tree produced by MERLANParser#entities.
+    def exitEntities(self, ctx:MERLANParser.EntitiesContext):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#image_entity_attribute.
-    def enterImage_entity_attribute(self, ctx:MERLANParser.Image_entity_attributeContext):
+    # Enter a parse tree produced by MERLANParser#attribute.
+    def enterAttribute(self, ctx:MERLANParser.AttributeContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#image_entity_attribute.
-    def exitImage_entity_attribute(self, ctx:MERLANParser.Image_entity_attributeContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#image_properties.
-    def enterImage_properties(self, ctx:MERLANParser.Image_propertiesContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#image_properties.
-    def exitImage_properties(self, ctx:MERLANParser.Image_propertiesContext):
+    # Exit a parse tree produced by MERLANParser#attribute.
+    def exitAttribute(self, ctx:MERLANParser.AttributeContext):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#image_property.
-    def enterImage_property(self, ctx:MERLANParser.Image_propertyContext):
+    # Enter a parse tree produced by MERLANParser#concrete_entities.
+    def enterConcrete_entities(self, ctx:MERLANParser.Concrete_entitiesContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#image_property.
-    def exitImage_property(self, ctx:MERLANParser.Image_propertyContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#image_property_attribute.
-    def enterImage_property_attribute(self, ctx:MERLANParser.Image_property_attributeContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#image_property_attribute.
-    def exitImage_property_attribute(self, ctx:MERLANParser.Image_property_attributeContext):
+    # Exit a parse tree produced by MERLANParser#concrete_entities.
+    def exitConcrete_entities(self, ctx:MERLANParser.Concrete_entitiesContext):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#scenarios.
-    def enterScenarios(self, ctx:MERLANParser.ScenariosContext):
+    # Enter a parse tree produced by MERLANParser#concrete_entity.
+    def enterConcrete_entity(self, ctx:MERLANParser.Concrete_entityContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#scenarios.
-    def exitScenarios(self, ctx:MERLANParser.ScenariosContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#scenario.
-    def enterScenario(self, ctx:MERLANParser.ScenarioContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#scenario.
-    def exitScenario(self, ctx:MERLANParser.ScenarioContext):
+    # Exit a parse tree produced by MERLANParser#concrete_entity.
+    def exitConcrete_entity(self, ctx:MERLANParser.Concrete_entityContext):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#expression.
-    def enterExpression(self, ctx:MERLANParser.ExpressionContext):
+    # Enter a parse tree produced by MERLANParser#abstract_entities.
+    def enterAbstract_entities(self, ctx:MERLANParser.Abstract_entitiesContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#expression.
-    def exitExpression(self, ctx:MERLANParser.ExpressionContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#boolean_expression.
-    def enterBoolean_expression(self, ctx:MERLANParser.Boolean_expressionContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#boolean_expression.
-    def exitBoolean_expression(self, ctx:MERLANParser.Boolean_expressionContext):
+    # Exit a parse tree produced by MERLANParser#abstract_entities.
+    def exitAbstract_entities(self, ctx:MERLANParser.Abstract_entitiesContext):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#expression_list.
-    def enterExpression_list(self, ctx:MERLANParser.Expression_listContext):
+    # Enter a parse tree produced by MERLANParser#abstract_entity.
+    def enterAbstract_entity(self, ctx:MERLANParser.Abstract_entityContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#expression_list.
-    def exitExpression_list(self, ctx:MERLANParser.Expression_listContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#scenario_requirement.
-    def enterScenario_requirement(self, ctx:MERLANParser.Scenario_requirementContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#scenario_requirement.
-    def exitScenario_requirement(self, ctx:MERLANParser.Scenario_requirementContext):
+    # Exit a parse tree produced by MERLANParser#abstract_entity.
+    def exitAbstract_entity(self, ctx:MERLANParser.Abstract_entityContext):
         pass
 
 
-    # Enter a parse tree produced by MERLANParser#scenario_image_entity.
-    def enterScenario_image_entity(self, ctx:MERLANParser.Scenario_image_entityContext):
+    # Enter a parse tree produced by MERLANParser#requirements.
+    def enterRequirements(self, ctx:MERLANParser.RequirementsContext):
         pass
 
-    # Exit a parse tree produced by MERLANParser#scenario_image_entity.
-    def exitScenario_image_entity(self, ctx:MERLANParser.Scenario_image_entityContext):
+    # Exit a parse tree produced by MERLANParser#requirements.
+    def exitRequirements(self, ctx:MERLANParser.RequirementsContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#requirement_definition.
+    def enterRequirement_definition(self, ctx:MERLANParser.Requirement_definitionContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#requirement_definition.
+    def exitRequirement_definition(self, ctx:MERLANParser.Requirement_definitionContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#requirement.
+    def enterRequirement(self, ctx:MERLANParser.RequirementContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#requirement.
+    def exitRequirement(self, ctx:MERLANParser.RequirementContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#complex_requirement.
+    def enterComplex_requirement(self, ctx:MERLANParser.Complex_requirementContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#complex_requirement.
+    def exitComplex_requirement(self, ctx:MERLANParser.Complex_requirementContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#simple_requirement.
+    def enterSimple_requirement(self, ctx:MERLANParser.Simple_requirementContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#simple_requirement.
+    def exitSimple_requirement(self, ctx:MERLANParser.Simple_requirementContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#concrete_requirement.
+    def enterConcrete_requirement(self, ctx:MERLANParser.Concrete_requirementContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#concrete_requirement.
+    def exitConcrete_requirement(self, ctx:MERLANParser.Concrete_requirementContext):
+        pass
+
+
+    # Enter a parse tree produced by MERLANParser#abstract_requirement.
+    def enterAbstract_requirement(self, ctx:MERLANParser.Abstract_requirementContext):
+        pass
+
+    # Exit a parse tree produced by MERLANParser#abstract_requirement.
+    def exitAbstract_requirement(self, ctx:MERLANParser.Abstract_requirementContext):
         pass
 
 
@@ -158,33 +158,6 @@ class MERLANListener(ParseTreeListener):
 
     # Exit a parse tree produced by MERLANParser#max_cardinality.
     def exitMax_cardinality(self, ctx:MERLANParser.Max_cardinalityContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#scenario_image_property.
-    def enterScenario_image_property(self, ctx:MERLANParser.Scenario_image_propertyContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#scenario_image_property.
-    def exitScenario_image_property(self, ctx:MERLANParser.Scenario_image_propertyContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#scenario_image_entity_attribute.
-    def enterScenario_image_entity_attribute(self, ctx:MERLANParser.Scenario_image_entity_attributeContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#scenario_image_entity_attribute.
-    def exitScenario_image_entity_attribute(self, ctx:MERLANParser.Scenario_image_entity_attributeContext):
-        pass
-
-
-    # Enter a parse tree produced by MERLANParser#scenario_image_property_attribute.
-    def enterScenario_image_property_attribute(self, ctx:MERLANParser.Scenario_image_property_attributeContext):
-        pass
-
-    # Exit a parse tree produced by MERLANParser#scenario_image_property_attribute.
-    def exitScenario_image_property_attribute(self, ctx:MERLANParser.Scenario_image_property_attributeContext):
         pass
 
 

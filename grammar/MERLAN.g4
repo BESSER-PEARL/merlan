@@ -3,74 +3,71 @@ grammar MERLAN;
 // Root rule
 script
         : NEWLINE?
-          image_entities?
-          image_properties?
-          scenarios?
+          entities?
+          requirements?
           NEWLINE?
           EOF
         ;
 
-// Image entities definition
-image_entities
-        : IMAGE_ENTITIES NEWLINE image_entity*
-        ;
-
-image_entity
-        : ID NEWLINE image_entity_attribute*
+entities
+        : ENTITIES NEWLINE
+          concrete_entities?
+          abstract_entities?
         ;
 
 
-image_entity_attribute
-        : HYPHEN DESCRIPTION COLON STRING NEWLINE
-        | HYPHEN COLOR COLON STRING NEWLINE
-        | HYPHEN WEIGHT COLON FLOAT NEWLINE
+attribute
+        : HYPHEN ID COLON (ID | STRING | FLOAT | INT | UNK) NEWLINE
         ;
 
-// Image properties definition
-image_properties
-        : IMAGE_PROPERTIES NEWLINE image_property*
+// Concrete entities definition
+concrete_entities
+        : CONCRETE NEWLINE concrete_entity*
         ;
 
-image_property
-        : ID NEWLINE image_property_attribute*
+concrete_entity
+        : ID NEWLINE attribute*
         ;
 
-image_property_attribute
-        : HYPHEN DESCRIPTION COLON STRING NEWLINE
-        | HYPHEN LIGHTING COLON STRING NEWLINE
-        | HYPHEN VERSION COLON SIGINT NEWLINE
+// Abstract entities definition
+abstract_entities
+        : ABSTRACT NEWLINE abstract_entity*
         ;
 
-// Scenarios definition
-scenarios
-        : SCENARIOS (NEWLINE scenario)+
+abstract_entity
+        : ID NEWLINE attribute*
         ;
 
-scenario
-        : ID NEWLINE expression
+// Requirements definition
+requirements
+        : REQUIREMENTS NEWLINE requirement_definition+
         ;
 
-expression
-        : boolean_expression
-        | scenario_requirement
+requirement_definition
+        : ID NEWLINE requirement
         ;
 
-boolean_expression
-        : (AND | OR) NEWLINE expression_list
-        | NOT NEWLINE expression
+requirement
+        : complex_requirement
+        | simple_requirement
         ;
 
-expression_list
-        : expression (NEWLINE expression)*
+complex_requirement
+        : (AND | OR) NEWLINE requirement+
+        | NOT NEWLINE requirement
         ;
 
-scenario_requirement
-        : scenario_image_entity
-        | scenario_image_property
+simple_requirement
+        : abstract_requirement
+        | concrete_requirement
         ;
 
-scenario_image_entity
-        : IMAGE_ENTITY cardinality? (NEWLINE scenario_image_entity_attribute)+
+concrete_requirement
+        : CONCRETE cardinality? NEWLINE attribute*
+        ;
+
+abstract_requirement
+        : ABSTRACT NEWLINE attribute*
         ;
 
 cardinality
@@ -85,50 +82,23 @@ max_cardinality
         : INT_NONZERO | STAR
         ;
 
-scenario_image_property
-        : IMAGE_PROPERTY (NEWLINE scenario_image_property_attribute)+
-        ;
-
-scenario_image_entity_attribute
-        : HYPHEN IMAGE_ENTITY_NAME COLON ID
-        | HYPHEN NAME COLON STRING
-        | HYPHEN SCORE COLON FLOAT
-        ;
-
-scenario_image_property_attribute
-        : HYPHEN IMAGE_PROPERTY_NAME COLON ID
-        | HYPHEN NAME COLON STRING
-        | HYPHEN SCORE COLON FLOAT
-        ;
-
 // Tokens
 
-IMAGE_ENTITY        : 'IMAGE_ENTITY' ;
-IMAGE_ENTITIES      : 'IMAGE_ENTITIES' ;
-IMAGE_PROPERTY      : 'IMAGE_PROPERTY' ;
-IMAGE_PROPERTIES    : 'IMAGE_PROPERTIES' ;
-SCENARIOS           : 'SCENARIOS' ;
+ENTITIES            : 'ENTITIES' ;
+CONCRETE            : 'CONCRETE' ;
+ABSTRACT            : 'ABSTRACT' ;
+REQUIREMENTS        : 'REQUIREMENTS' ;
 
 AND                 : 'AND' ;
 OR                  : 'OR' ;
 NOT                 : 'NOT' ;
-
-COLOR               : 'color' ;
-DESCRIPTION         : 'description' ;
-WEIGHT              : 'weight' ;
-LIGHTING            : 'lighting' ;
-VERSION             : 'version' ;
-
-IMAGE_ENTITY_NAME   : 'image_entity' ;
-IMAGE_PROPERTY_NAME : 'image_property' ;
-NAME                : 'name' ;
-SCORE               : 'score' ;
 
 ID : [a-zA-Z_][a-zA-Z0-9_]* ;
 STRING : '"' (~["\\] | '\\' .)* '"' ;
 FLOAT : [0-9]+ '.' [0-9]+ ;
 INT_NONZERO : [1-9] [0-9]* ;
 INT : [0-9]+ ;
+UNK : '?' ;
 SIGINT : '-'? INT ;
 STAR : '*' ;
 

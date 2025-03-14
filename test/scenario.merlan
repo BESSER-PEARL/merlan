@@ -1,33 +1,50 @@
-IMAGE_ENTITIES
-
+ENTITIES:
+  CONCRETE:
     person
-        - description: "a human being"
-        - weight: 70.5
-        - color: "white"
+      - gender: ?
+      - ethnicity: ?
+    smoke
+    fire
     dog
-    phone
-        - description: "a human being"
-    bottle
-
-IMAGE_PROPERTIES
-
-    indoors
-        - description: "The picture is taken in an indoor environment (i.e., not outdoors)"
-    iphone
-        - description: "The phone in the image (if there is one) is an iPhone (Apple)"
-
-SCENARIOS
-    scenario1
-        AND
-            IMAGE_PROPERTY
-                - image_property: iphone
-                - name: "iphone"
-                - score: 0.5
-            IMAGE_ENTITY [2..*]
-                - image_entity: person
-                - name: "person"
-                - score: 0.3
-            IMAGE_ENTITY
-                - image_entity: phone
-                - name: "phone"
-                - score: 0.5
+      - breed: "labrador"
+    car:
+      - brand: ?
+      - model: ?
+      - color: ?
+  ABSTRACT:
+    night
+      - description: "The image is taken at night"
+    empty_house
+      - description: "The house is empty"
+REQUIREMENTS:
+  requirement1:
+    CONCRETE
+      - entity: smoke
+      - name: "smoke"
+      - modality: "image"
+      - score: 0.5
+  requirement2
+    OR
+      CONCRETE
+      - entity: fire
+      - name: "fire"
+      - score: 0.5
+      - modality: "image"
+      AND
+        ABSTRACT
+          - entity: empty_house
+          - name: "empty_house"
+          - score: 0.3
+          - modality: "image"
+        OR
+          CONCRETE [1..*]
+            - entity: person
+            - name: "man"
+            - score: 0.7
+            - modality: "image"
+            - gender: "male"
+          CONCRETE [1..*]
+            - entity: car
+            - name: "unknown_car"
+            - score: 0.7
+            - modality: "image"
