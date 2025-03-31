@@ -14,10 +14,17 @@ def get_attribute(attribute_name: str, attributes: list[tuple[str, str]]) -> str
     return attribute_values[0]
 
 
-def join_attributes(attributes:  list[tuple[str, str]], exclude: list[str] = None):
+def join_attributes(attributes: list[tuple[str, str]], exclude: list[str] = None):
     if exclude is None:
         exclude = []
     return ', '.join([f'"{attribute[0]}": {attribute[1]}' for attribute in attributes if attribute[0] not in exclude])
+
+
+def duplicated_attributes(attributes: list[tuple[str, str]]) -> bool:
+    attribute_names = [attribute[0] for attribute in attributes]
+    attribute_names_set = set(attribute_names)
+    return len(attribute_names_set) < len(attribute_names)
+
 
 class SymbolTable:
 
@@ -60,9 +67,9 @@ class BESSERGenerator(MERLANVisitor):
             "from besser.agent.core.entity.image.abstract_entity import AbstractEntity",
             "from besser.agent.core.entity.image.concrete_entity import ConcreteEntity",
             "from besser.agent.core.requirement.abstract_requirement import AbstractRequirement",
-            "from besser.agent.core.requirement.boolean_expression import OR, AND, NOT",
+            "from besser.agent.core.requirement.complex_requirement import OR, AND, NOT",
             "from besser.agent.core.requirement.concrete_requirement import ConcreteRequirement",
-            "from besser.agent.core.requirement.requirement import Requirement"
+            "from besser.agent.core.requirement.requirement import RequirementDefinition"
         ]
 
     # Visit a parse tree produced by MERLANParser#script.
@@ -73,6 +80,7 @@ class BESSERGenerator(MERLANVisitor):
 
     # Visit a parse tree produced by MERLANParser#entities.
     def visitEntities(self, ctx:MERLANParser.EntitiesContext):
+        self.code.append('# Entities')
         self.visit(ctx.concrete_entities())
         self.visit(ctx.abstract_entities())
 
@@ -82,47 +90,41 @@ class BESSERGenerator(MERLANVisitor):
         attribute_name = ctx.getChild(1).getText()
         attribute_value = ctx.getChild(3).getText()
         if attribute_value == '?':
-            attribute_value = '"?"'  # TODO: HANDLE EMPTY VALUES
+            attribute_value = 'None'
         return attribute_name, attribute_value
 
     # Visit a parse tree produced by MERLANParser#concrete_entities.
     def visitConcrete_entities(self, ctx:MERLANParser.Concrete_entitiesContext):
-        self.code.append('# Concrete Entities')
         for concrete_entity in ctx.concrete_entity():
             self.visit(concrete_entity)
 
     # Visit a parse tree produced by MERLANParser#concrete_entity.
     def visitConcrete_entity(self, ctx:MERLANParser.Concrete_entityContext):
-        # TODO CHECK ATTRIBUTES ARE NOT REPEATED
-        # TODO CHECK MANDATORY ATTRIBUTES
-        # TODO ATTRIBUTE VALUE IS VALID TYPE
         id = ctx.ID().getText()
         self.symbol_table.add_concrete_entity(id)
         attribute_list = []
         for attribute in ctx.attribute():
             attribute_list.append(self.visit(attribute))
+        if duplicated_attributes(attribute_list):
+            raise ValueError(f"Duplicated attributes in concrete entity '{id}'")
         attributes = join_attributes(attribute_list)
-        # TODO UPDATE PYTHON CODE
         self.code.append(f'{id} = ConcreteEntity(name="{id}", attributes={{{attributes}}})')
 
     # Visit a parse tree produced by MERLANParser#abstract_entities.
     def visitAbstract_entities(self, ctx:MERLANParser.Abstract_entitiesContext):
-        self.code.append('# Abstract Entities')
         for abstract_entity in ctx.abstract_entity():
             self.visit(abstract_entity)
 
     # Visit a parse tree produced by MERLANParser#abstract_entity.
     def visitAbstract_entity(self, ctx:MERLANParser.Abstract_entityContext):
-        # TODO CHECK ATTRIBUTES ARE NOT REPEATED
-        # TODO CHECK MANDATORY ATTRIBUTES
-        # TODO ATTRIBUTE VALUE IS VALID TYPE
         id = ctx.ID().getText()
         self.symbol_table.add_abstract_entity(id)
         attribute_list = []
         for attribute in ctx.attribute():
             attribute_list.append(self.visit(attribute))
+        if duplicated_attributes(attribute_list):
+            raise ValueError(f"Duplicated attributes in abstract entity '{id}'")
         attributes = join_attributes(attribute_list)
-        # TODO UPDATE PYTHON CODE
         self.code.append(f'{id} = AbstractEntity(name="{id}", attributes={{{attributes}}})')
 
     # Visit a parse tree produced by MERLANParser#requirements.
@@ -135,10 +137,9 @@ class BESSERGenerator(MERLANVisitor):
     def visitRequirement_definition(self, ctx: MERLANParser.Requirement_definitionContext):
         id = ctx.ID().getText()
         self.symbol_table.add_requirement(id)
-        # TODO UPDATE PYTHON CODE
-        self.code.append(f'{id} = Requirement("{id}")')
+        self.code.append(f'{id} = RequirementDefinition("{id}")')
         expression = self.visit(ctx.requirement())
-        self.code.append(f'{id}.set_expression({expression})')
+        self.code.append(f'{id}.set({expression})')
 
     # Visit a parse tree produced by MERLANParser#requirement.
     def visitRequirement(self, ctx:MERLANParser.RequirementContext):
@@ -169,8 +170,6 @@ class BESSERGenerator(MERLANVisitor):
 
     # Visit a parse tree produced by MERLANParser#concrete_requirement.
     def visitConcrete_requirement(self, ctx:MERLANParser.Concrete_requirementContext):
-        # TODO CHECK ATTRIBUTES ARE NOT REPEATED
-        # TODO CHECK MANDATORY ATTRIBUTES
         # TODO ATTRIBUTE VALUE IS VALID TYPE
         attribute_list = []
         if ctx.cardinality():
@@ -179,8 +178,11 @@ class BESSERGenerator(MERLANVisitor):
             attribute_list.append(('max', max))
         for attribute in ctx.attribute():
             attribute_list.append(self.visit(attribute))
+        if duplicated_attributes(attribute_list):
+            raise ValueError(f"Duplicated attributes in concrete requirement")
         name = get_attribute('name', attribute_list)
         entity = get_attribute('entity', attribute_list)
+        modality = get_attribute('modality', attribute_list)
         attributes = join_attributes(attribute_list, exclude=['name', 'entity'])
         # TODO UPDATE PYTHON CODE
         expression = f'ConcreteRequirement(name={name}, concrete_entity={entity}, attributes={{{attributes}}})'
@@ -188,16 +190,16 @@ class BESSERGenerator(MERLANVisitor):
 
     # Visit a parse tree produced by MERLANParser#abstract_requirement.
     def visitAbstract_requirement(self, ctx:MERLANParser.Abstract_requirementContext):
-        # TODO CHECK ATTRIBUTES ARE NOT REPEATED
-        # TODO CHECK MANDATORY ATTRIBUTES
         # TODO ATTRIBUTE VALUE IS VALID TYPE
         attribute_list = []
         for attribute in ctx.attribute():
             attribute_list.append(self.visit(attribute))
+        if duplicated_attributes(attribute_list):
+            raise ValueError(f"Duplicated attributes in abstract requirement")
         name = get_attribute('name', attribute_list)
         entity = get_attribute('entity', attribute_list)
+        modality = get_attribute('modality', attribute_list)
         attributes = join_attributes(attribute_list, exclude=['name', 'entity'])
-        # TODO UPDATE PYTHON CODE
         expression = f'AbstractRequirement(name={name}, abstract_entity={entity}, attributes={{{attributes}}})'
         return expression
 
