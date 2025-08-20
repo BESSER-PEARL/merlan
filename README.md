@@ -1,4 +1,4 @@
-# MERLAN: Multimodal Environment Recognition Language
+# MERLAN: Multimodal Environment Requirements Language
 
 
 ## Generate the ANTLR code
