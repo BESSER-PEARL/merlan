@@ -145,17 +145,22 @@ class BESSERGenerator(MERLANVisitor):
         for abstract_entity in ctx.abstract_entity():
             self.visit(abstract_entity)
 
+    # Visit a parse tree produced by MERLANParser#contextual_factor_type.
+    def visitContextual_factor_type(self, ctx: MERLANParser.Contextual_factor_typeContext):
+        return ctx.getText()
+
     # Visit a parse tree produced by MERLANParser#abstract_entity.
     def visitAbstract_entity(self, ctx:MERLANParser.Abstract_entityContext):
         id = ctx.ID().getText()
         self.symbol_table.add_abstract_entity(id)
+        contextual_factor = f'"{ctx.contextual_factor_type().getText()}"' if ctx.contextual_factor_type() else 'None'
         attribute_list = []
         for attribute in ctx.attribute():
             attribute_list.append(self.visit(attribute))
         if duplicated_attributes(attribute_list):
             raise ValueError(f"Duplicated attributes in abstract entity '{id}'")
         attributes = join_attributes(attribute_list)
-        self.code.append(f'{id} = AbstractEntity(name="{id}", attributes={{{attributes}}})')
+        self.code.append(f'{id} = AbstractEntity(name="{id}", contextual_factor={contextual_factor}, attributes={{{attributes}}})')
 
     # Visit a parse tree produced by MERLANParser#requirements.
     def visitRequirements(self, ctx:MERLANParser.RequirementsContext):

@@ -35,7 +35,11 @@ abstract_entities
         ;
 
 abstract_entity
-        : ID NEWLINE attribute*
+        : ID (COLON contextual_factor_type)? NEWLINE attribute*
+        ;
+
+contextual_factor_type
+        : TIME | SPATIAL | AMBIENT | PRESENCE
         ;
 
 // Requirements definition
@@ -103,6 +107,11 @@ TEXT                : 'TEXT' ;
 VIDEO               : 'VIDEO' ;
 GESTURE             : 'GESTURE' ;
 SENSOR              : 'SENSOR' ;
+
+TIME                : 'TIME' ;
+SPATIAL             : 'SPATIAL' ;
+AMBIENT             : 'AMBIENT' ;
+PRESENCE            : 'PRESENCE' ;
 
 ID : [a-zA-Z_][a-zA-Z0-9_]* ;
 STRING : '"' (~["\\] | '\\' .)* '"' ;

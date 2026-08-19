@@ -12,9 +12,9 @@ ENTITIES:
       - model: ?
       - color: ?
   ABSTRACT:
-    night
+    night: TIME
       - description: "The image is taken at night"
-    empty_house
+    empty_house: SPATIAL
       - description: "The house is empty"
 REQUIREMENTS:
   requirement1:
