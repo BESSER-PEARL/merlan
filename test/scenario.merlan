@@ -7,7 +7,7 @@ ENTITIES:
     fire
     dog
       - breed: "labrador"
-    car:
+    car
       - brand: ?
       - model: ?
       - color: ?
@@ -18,33 +18,28 @@ ENTITIES:
       - description: "The house is empty"
 REQUIREMENTS:
   requirement1:
-    CONCRETE
+    CONCRETE IMAGE
       - entity: smoke
       - name: "smoke"
-      - modality: "image"
       - confidence: 0.5
   requirement2
     OR
-      CONCRETE
+      CONCRETE IMAGE
       - entity: fire
       - name: "fire"
       - confidence: 0.5
-      - modality: "image"
       AND
-        ABSTRACT
+        ABSTRACT IMAGE
           - entity: empty_house
           - name: "empty_house"
           - confidence: 0.3
-          - modality: "image"
         OR
-          CONCRETE [1..*]
+          CONCRETE IMAGE [1..*]
             - entity: person
             - name: "man"
             - confidence: 0.7
-            - modality: "image"
             - gender: "male"
-          CONCRETE [1..*]
+          CONCRETE IMAGE [1..*]
             - entity: car
             - name: "unknown_car"
             - confidence: 0.7
-            - modality: "image"

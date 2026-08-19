@@ -63,11 +63,15 @@ simple_requirement
         ;
 
 concrete_requirement
-        : CONCRETE cardinality? NEWLINE attribute*
+        : CONCRETE modality cardinality? NEWLINE attribute*
         ;
 
 abstract_requirement
-        : ABSTRACT NEWLINE attribute*
+        : ABSTRACT modality NEWLINE attribute*
+        ;
+
+modality
+        : IMAGE | AUDIO | TEXT | VIDEO | GESTURE | SENSOR
         ;
 
 cardinality
@@ -92,6 +96,13 @@ REQUIREMENTS        : 'REQUIREMENTS' ;
 AND                 : 'AND' ;
 OR                  : 'OR' ;
 NOT                 : 'NOT' ;
+
+IMAGE               : 'IMAGE' ;
+AUDIO               : 'AUDIO' ;
+TEXT                : 'TEXT' ;
+VIDEO               : 'VIDEO' ;
+GESTURE             : 'GESTURE' ;
+SENSOR              : 'SENSOR' ;
 
 ID : [a-zA-Z_][a-zA-Z0-9_]* ;
 STRING : '"' (~["\\] | '\\' .)* '"' ;
