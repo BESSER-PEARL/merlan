@@ -60,20 +60,50 @@ class SymbolTable:
 
 class BESSERGenerator(MERLANVisitor):
 
+    MODALITY_MODULE_MAP = {
+        'IMAGE': 'image',
+        'AUDIO': 'audio',
+        'TEXT': 'text',
+        'VIDEO': 'video',
+        'GESTURE': 'gesture',
+        'SENSOR': 'sensor',
+    }
+
     def __init__(self):
         super().__init__()
         self.symbol_table: SymbolTable = SymbolTable()
-        self.code: list[str] = [
-            "from besser.agent.core.entity.image.abstract_entity import AbstractEntity",
-            "from besser.agent.core.entity.image.concrete_entity import ConcreteEntity",
+        self.used_modalities: list[str] = []
+        self.code: list[str] = []
+
+    def _collect_modalities(self, ctx):
+        if ctx is None:
+            return
+        if hasattr(ctx, 'modality') and callable(getattr(ctx, 'modality')):
+            try:
+                m_ctx = ctx.modality()
+                if m_ctx is not None:
+                    modality = m_ctx.getText()
+                    if modality not in self.used_modalities:
+                        self.used_modalities.append(modality)
+            except Exception:
+                pass
+        for i in range(ctx.getChildCount()):
+            self._collect_modalities(ctx.getChild(i))
+
+    # Visit a parse tree produced by MERLANParser#script.
+    def visitScript(self, ctx: MERLANParser.ScriptContext):
+        self._collect_modalities(ctx.requirements())
+        primary = self.MODALITY_MODULE_MAP.get(
+            self.used_modalities[0] if self.used_modalities else 'IMAGE', 'image'
+        )
+        self.code = [
+            f"from besser.agent.core.entity.{primary}.abstract_entity import AbstractEntity",
+            f"from besser.agent.core.entity.{primary}.concrete_entity import ConcreteEntity",
             "from besser.agent.core.requirement.abstract_requirement import AbstractRequirement",
             "from besser.agent.core.requirement.complex_requirement import OR, AND, NOT",
             "from besser.agent.core.requirement.concrete_requirement import ConcreteRequirement",
-            "from besser.agent.core.requirement.requirement import RequirementDefinition"
+            "from besser.agent.core.requirement.requirement import RequirementDefinition",
         ]
-
-    # Visit a parse tree produced by MERLANParser#script.
-    def visitScript(self, ctx:MERLANParser.ScriptContext):
         self.visit(ctx.entities())
         self.visit(ctx.requirements())
         return '\n'.join(self.code)
