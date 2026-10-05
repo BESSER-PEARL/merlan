@@ -221,6 +221,7 @@ class BESSERGenerator(MERLANVisitor):
             raise ValueError(f"Duplicated attributes in concrete requirement")
         name = get_attribute('name', attribute_list)
         entity = get_attribute('entity', attribute_list)
+        get_attribute('confidence', attribute_list)
         modality = ctx.modality().getText()
         attributes = join_attributes(attribute_list, exclude=['name', 'entity'])
         expression = f'ConcreteRequirement(name={name}, concrete_entity={entity}, modality="{modality}", attributes={{{attributes}}})'
@@ -236,6 +237,7 @@ class BESSERGenerator(MERLANVisitor):
             raise ValueError(f"Duplicated attributes in abstract requirement")
         name = get_attribute('name', attribute_list)
         entity = get_attribute('entity', attribute_list)
+        get_attribute('confidence', attribute_list)
         modality = ctx.modality().getText()
         attributes = join_attributes(attribute_list, exclude=['name', 'entity'])
         expression = f'AbstractRequirement(name={name}, abstract_entity={entity}, modality="{modality}", attributes={{{attributes}}})'
